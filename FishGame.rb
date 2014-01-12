@@ -80,31 +80,74 @@ class FishGame
 		end
 	end
 
-	def has_books_check(game_deck)
+	def player_with_most_books(game_deck)
 
 	end
 
 
+	def players_have_books(game_name)
+		books_check = 0
+		index_of_winner = 0
+		game_name.player.each do |player|  #look to see if ANY PLAYERS have books > 0
+		books_check = books_check + player.fish_hand.books_collected
+		end
+
+		if books_check > 0
+			return books_check
+		else
+			return nil
+		end
+	end
+
+	def return_book_winner_index(game_name) #For use with most books
+		most_books = 0
+		biggest = 0
+		challenger = 0
+
+		game_name.player.each do |player|  #look to see if ANY PLAYERS have books > 0
+			challenger = player.fish_hand.books_collected
+			#puts "Challenger: #{challenger}"
+		
+			if challenger > biggest
+				biggest = challenger
+				most_books = game_name.player.index(player)  #SHOULD eval to 0, 1, etc.
+			end
+		end
+		
+		if biggest > 0
+			return most_books
+		else
+			return nil
+		end
+	end
+
+	def players_have_cards?(game_name)
+			game_name.player.each do |player| 
+			
+			if player.fish_hand.player_cards.empty?
+				player_hands_empty = true
+				return player_hands_empty
+			else
+				player_hands_empty = false
+				return player_hands_empty
+			end
+		end
+	end
+
 	def game_won?(game_deck, game_name)	#####METHOD TO SEE IF THERE IS A WINNER
 
 		books_check = 0
-		is_empty = false
+		player_hands_empty = false
 		index_of_winner = nil
-		#is_empty = player.fish_hand.player_cards.empty?
+		#player_hands_empty = player.fish_hand.player_cards.empty?
 
-			game_name.player.each do |player|  #look to see if ANY PLAYERS have books > 0
-				books_check = books_check + player.fish_hand.books_collected
-				index_of_winner = game_name.player.index(player)
-			end
+			books_check = players_have_books(game_deck)
+			index_of_winner = return_book_winner_index(game_name)
+
+
 #		puts "book check after each loop and before if: #{books_check}"
 
-		game_name.player.each do |player|  #look to see if ANY PLAYERS have books > 0
-			
-			if player.fish_hand.player_cards.empty?
-				is_empty = true
-				index_of_winner = game_name.player.index(player)  
-			end
-		end
+
 
 
 		if game_deck.all_cards.empty? == true && books_check == 0	#No winners case
@@ -112,7 +155,7 @@ class FishGame
 			@winner_message = "The deck is empty and no players have any books.  The game has ended with NO winners."
 			return true
 
-		elsif is_empty == true	#Case for if player has NO CARDS LEFT
+		elsif player_hands_empty == true	#Case for if player has NO CARDS LEFT
 
 			
 			@winner_message = "player #{index_of_winner + 1} has eliminated all cards from his hand, thereby winning the game!"
