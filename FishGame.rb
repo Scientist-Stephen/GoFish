@@ -106,8 +106,7 @@ class FishGame
 
 		game_name.player.each do |player|  #look to see if ANY PLAYERS have books > 0
 			challenger = player.fish_hand.books_collected
-			#puts "Challenger: #{challenger}"
-		
+	
 			if challenger > biggest
 				biggest = challenger
 				most_books = game_name.player.index(player)  #SHOULD eval to 0, 1, etc.
@@ -138,16 +137,15 @@ class FishGame
 		number_of_most_books = nil
 
 		lead_player_index = return_book_winner_index(game_name)#O*&QY#$QWHFHBJHJ --here.  IT returns nil and causes the thing at line 145 to throw an error.
-		puts "Lead player index:  #{lead_player_index}"
-		p lead_player_index
 
-		#puts "player books for game_name #{game_name.player[lead_player_index]}"
-		puts "player books: #{game_name.player[lead_player_index].fish_hand.books_collected}"
-		p game_name.player[lead_player_index].fish_hand.books_collected
+		if lead_player_index == nil
+			lead_player_index = 0 ##WNARKLJFSN WHAAAT?
+		end
+
 
 		number_of_most_books = game_name.player[lead_player_index].fish_hand.books_collected
-		puts "number of most books:  #{number_of_most_books}"
-		p number_of_most_books
+	#	puts "number of most books:  #{number_of_most_books}"
+#		p number_of_most_books
 
 		if number_of_most_books == nil
 			return 0

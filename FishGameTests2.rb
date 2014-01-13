@@ -111,11 +111,10 @@ describe FishGame do
 		@fish_game.player[2].fish_hand.books_collected = 0
 
 		lead_player_most_books = @fish_game.lead_player_books(@fish_game)
-		lead_player_most_books.should eq(0)			
+		lead_player_most_books.should eq(0)
 	end
 
-=begin
-	it "returns the number of books the player with the most books has" do
+	it "returns the number of books the player with the most books has (last player most books" do
 		@fish_game.player[0].fish_hand.books_collected = 3
 		@fish_game.player[1].fish_hand.books_collected = 1
 		@fish_game.player[2].fish_hand.books_collected = 5
@@ -124,12 +123,43 @@ describe FishGame do
 		lead_player_most_books.should eq(5)			
 	end
 
-=end
+	it "returns the number of books the player with the most books has (first player most books" do
+		@fish_game.player[0].fish_hand.books_collected = 4
+		@fish_game.player[1].fish_hand.books_collected = 0
+		@fish_game.player[2].fish_hand.books_collected = 2
 
+		lead_player_most_books = @fish_game.lead_player_books(@fish_game)
+		lead_player_most_books.should eq(4)			
+	end
 
+	it "returns nil for player array index for most books when no players have any books" do
+		@fish_game.player[0].fish_hand.books_collected = 0
+		@fish_game.player[1].fish_hand.books_collected = 0
+		@fish_game.player[2].fish_hand.books_collected = 0
 
+		most_books_index = @fish_game.return_book_winner_index(@fish_game)
+		most_books_index.should eq(nil)
+	end
 
+	it "returns player array index for player with the most books, case that first player has most books" do
+		@fish_game.player[0].fish_hand.books_collected = 3
+		@fish_game.player[1].fish_hand.books_collected = 0
+		@fish_game.player[2].fish_hand.books_collected = 1
 
+		most_books_index = @fish_game.return_book_winner_index(@fish_game)
+		most_books_index.should eq(0)
+	end
+
+		it "returns player array index for player with the most books, case that last player has most books" do
+		@fish_game.player[0].fish_hand.books_collected = 3
+		@fish_game.player[1].fish_hand.books_collected = 1
+		@fish_game.player[2].fish_hand.books_collected = 4
+
+		most_books_index = @fish_game.return_book_winner_index(@fish_game)
+		most_books_index.should eq(2)
+	end
+
+	
 
 
 
