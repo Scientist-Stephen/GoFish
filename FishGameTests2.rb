@@ -15,7 +15,7 @@ describe FishGame do
 
 	after do	
 	end
-
+#=begin
 	it "checks for player books and finds none" do
 		@fish_game.player[0].fish_hand.books_collected = 0
 		@fish_game.player[1].fish_hand.books_collected = 0
@@ -78,16 +78,53 @@ describe FishGame do
 		most_books.should eq(2)
 	end
 
-	it "returns index of most books when players have no books" do 
+	it "returns false if all players have cards" do 
 	
-	@fish_game.player[0].fish_hand.player_cards = %w(2 4 6 8 A)
-	@fish_game.player[1].fish_hand.player_cards = %w(3 6 9 J A)
-	@fish_game.player[2].fish_hand.player_cards = %w(K J Q 2 5)
+		@fish_game.player[0].fish_hand.player_cards = %w(2)
+		@fish_game.player[1].fish_hand.player_cards = %w(3 6 9 J A)
+		@fish_game.player[2].fish_hand.player_cards = %w(2 5)
 
-	@fish_game.players_have_cards?(@fish_game)
-	
+		cards_available = @fish_game.players_hand_empty?(@fish_game)
+		cards_available.should eq(false)
 	end
 
+	it "returns true if any players have 0 cards" do 
+	
+		@fish_game.player[0].fish_hand.player_cards = %w()
+		@fish_game.player[1].fish_hand.player_cards = %w(3 6 9 J A)
+		@fish_game.player[2].fish_hand.player_cards = %w(K J Q 2 5)
+
+		cards_available = @fish_game.players_hand_empty?(@fish_game)
+		cards_available.should eq(true)
+
+		@fish_game.player[0].fish_hand.player_cards = %w(K J)
+		@fish_game.player[1].fish_hand.player_cards = %w(3 6 9 J A)
+		@fish_game.player[2].fish_hand.player_cards = %w()
+
+		cards_available = @fish_game.players_hand_empty?(@fish_game)
+		cards_available.should eq(true)
+	end
+
+	it "returns the number of books the player with the most books has (case, no players have any books)" do
+		@fish_game.player[0].fish_hand.books_collected = 0
+		@fish_game.player[1].fish_hand.books_collected = 0
+		@fish_game.player[2].fish_hand.books_collected = 0
+
+		lead_player_most_books = @fish_game.lead_player_books(@fish_game)
+		lead_player_most_books.should eq(0)			
+	end
+
+=begin
+	it "returns the number of books the player with the most books has" do
+		@fish_game.player[0].fish_hand.books_collected = 3
+		@fish_game.player[1].fish_hand.books_collected = 1
+		@fish_game.player[2].fish_hand.books_collected = 5
+
+		lead_player_most_books = @fish_game.lead_player_books(@fish_game)
+		lead_player_most_books.should eq(5)			
+	end
+
+=end
 
 
 

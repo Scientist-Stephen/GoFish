@@ -85,7 +85,7 @@ class FishGame
 	end
 
 
-	def players_have_books(game_name)
+	def players_have_books(game_name)	#returns total # books for all players
 		books_check = 0
 		index_of_winner = 0
 		game_name.player.each do |player|  #look to see if ANY PLAYERS have books > 0
@@ -121,47 +121,69 @@ class FishGame
 		end
 	end
 
-	def players_have_cards?(game_name)
+	def players_hand_empty?(game_name)
+			player_hands_empty = false
 			game_name.player.each do |player| 
-			
-			if player.fish_hand.player_cards.empty?
-				player_hands_empty = true
-				return player_hands_empty
-			else
-				player_hands_empty = false
+			player_hands_empty = player.fish_hand.player_cards.empty?
+
+			if player_hands_empty == true
 				return player_hands_empty
 			end
 		end
+		return player_hands_empty
+	end
+
+	def lead_player_books(game_name)	#returns # of books for player with the most books
+		lead_player_index = nil
+		number_of_most_books = nil
+
+		lead_player_index = return_book_winner_index(game_name)#O*&QY#$QWHFHBJHJ --here.  IT returns nil and causes the thing at line 145 to throw an error.
+		puts "Lead player index:  #{lead_player_index}"
+		p lead_player_index
+
+		#puts "player books for game_name #{game_name.player[lead_player_index]}"
+		puts "player books: #{game_name.player[lead_player_index].fish_hand.books_collected}"
+		p game_name.player[lead_player_index].fish_hand.books_collected
+
+		number_of_most_books = game_name.player[lead_player_index].fish_hand.books_collected
+		puts "number of most books:  #{number_of_most_books}"
+		p number_of_most_books
+
+		if number_of_most_books == nil
+			return 0
+		end
+
+		return number_of_most_books
 	end
 
 	def game_won?(game_deck, game_name)	#####METHOD TO SEE IF THERE IS A WINNER
 
-		books_check = 0
-		player_hands_empty = false
+		number_of_books = 0
+		empty_hand = false
 		index_of_winner = nil
-		#player_hands_empty = player.fish_hand.player_cards.empty?
+		#empty_hand = player.fish_hand.player_cards.empty?
 
-			books_check = players_have_books(game_deck)
-			index_of_winner = return_book_winner_index(game_name)
+			number_of_most_books = lead_player_books
+			index_of_winner = return_book_winner_index(@fishgame)
+			empty_hand = players_hand_empty?(@fishgame)
 
-
-#		puts "book check after each loop and before if: #{books_check}"
-
-
+#		puts "book check after each loop and before if: #{number_of_books}"
 
 
-		if game_deck.all_cards.empty? == true && books_check == 0	#No winners case
+
+
+		if game_deck.all_cards.empty? == true && number_of_books == 0	#No winners case
 			
 			@winner_message = "The deck is empty and no players have any books.  The game has ended with NO winners."
 			return true
 
-		elsif player_hands_empty == true	#Case for if player has NO CARDS LEFT
+		elsif empty_hand == true	#Case for if player has NO CARDS LEFT
 
 			
 			@winner_message = "player #{index_of_winner + 1} has eliminated all cards from his hand, thereby winning the game!"
 			return true
 
-		elsif game_deck.all_cards.empty? == true && books_check > 0 && books_check < 7 #Deck empty/Most books winner
+		elsif game_deck.all_cards.empty? == true && number_of_books > 0 && number_of_books < 7 #Deck empty/Most books winner
 			most_decks = 0
 			biggest = 0
 
@@ -179,10 +201,10 @@ class FishGame
 			#puts "Most decks is now #{most_decks}"
 			return true
 
-		elsif books_check >= 7  #Case for one player having over half the books
+		elsif number_of_books >= 7  #Case for one player having over half the books
 
 
-			@winner_message = "player #{index_of_winner + 1} has gained more than half of the available books, having a total of #{books_check} books.  He has won the game."
+			@winner_message = "player #{index_of_winner + 1} has gained more than half of the available books, having a total of #{number_of_books} books.  He has won the game."
 			return true
 
 		else
